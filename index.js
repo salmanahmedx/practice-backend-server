@@ -1,6 +1,8 @@
 //express
 //npm init
-// npm i cors express mongodb dotenv (nodemon already installed)
+//npm i cors express mongodb dotenv (nodemon already installed)
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
@@ -8,9 +10,36 @@ const port = process.env.PORT || 5000;
 require("dotenv").config();
 // middleware
 const cors = require("cors");
+const res = require('express/lib/response');
 //CORS allows you to configure the web API's security. It has to do with allowing other domains to make requests against your web API. For example, if you had your web API on one server and your web app on another you could configure CORS in your Web API to allow your web app to make calls to your web API.
 app.use(cors());
 app.use(express.json());
+
+//connecting database // START WITH A TEST RUN BASIC CONNECT
+// Then connect from node mongo docs
+
+const uri = "mongodb+srv://pardon:pardon@cluster0.znyio.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+async function run() {
+    try {
+        await client.connect();
+        const appointmentsCollection = client.db("demystify_backend").collection("appointments");
+
+        //get all products
+        app.get("/products", async (req, res) => {
+            const query = {};
+            const cursor = appointmentsCollection.find(query);
+            //we will wait for cursor to load all products then run toArray() method
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+    }
+    finally {
+
+    }
+}
+run().catch(console.dir)
 
 
 //This app starts a server and listens on port 5000 for connections. The app responds with “Hello from the other side.” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
