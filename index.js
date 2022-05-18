@@ -58,6 +58,14 @@ async function run() {
                 const result = await appointmentsCollection.updateOne(filter, updateDetails, options);
                 res.send(result);
             })
+
+            //delete operation
+            app.delete("/products/:id", async (req, res) => {
+                const id = req.params.id;
+                const query = { _id: Number(id) };
+                const result = await appointmentsCollection.deleteOne(query);
+                res.send(result)
+            })
         })
     }
     finally {
