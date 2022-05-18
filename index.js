@@ -32,6 +32,16 @@ async function run() {
             const cursor = appointmentsCollection.find(query);
             //we will wait for cursor to load all products then run toArray() method
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        //get one product
+        app.get("/products/:id", async (req, res) => {
+            //id information from request params
+            const id = req.params.id;
+            const query = { _id: Number(id) };
+            //one item so we don't use toArray()
+            const result = await appointmentsCollection.findOne(query)
             res.send(result)
         })
     }
@@ -39,7 +49,7 @@ async function run() {
 
     }
 }
-run().catch(console.dir)
+run().catch(console.dir);
 
 
 //This app starts a server and listens on port 5000 for connections. The app responds with “Hello from the other side.” for requests to the root URL (/) or route. For every other path, it will respond with a 404 Not Found.
