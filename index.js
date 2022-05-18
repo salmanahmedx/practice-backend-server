@@ -43,6 +43,21 @@ async function run() {
             //one item so we don't use toArray()
             const result = await appointmentsCollection.findOne(query)
             res.send(result)
+
+            //update item - PUT
+            app.put("/products/:id", async (req, res) => {
+                const id = req.params.id;
+                const filter = { _id: Number(id) };
+                const updatedItem = req.body;
+                const options = { upsert: true };
+                const updateDetails = {
+                    $set: {
+                        name: updatedItem.name,
+                    }
+                };
+                const result = await appointmentsCollection.updateOne(filter, updateDetails, options);
+                res.send(result);
+            })
         })
     }
     finally {
